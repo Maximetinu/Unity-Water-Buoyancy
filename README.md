@@ -1,7 +1,9 @@
 # Water Buoyancy Physics Simulation
 Water Buoyancy Simulation for Unity Engine (2019.2.0f1)
 
-** These screenshots are from original repository! This repository does not contain any water FX **
+Credits to [dbrizov](https://github.com/dbrizov)
+
+**These screenshots are from original repository! This repository does not contain any water FX**
 
 ![gif](https://github.com/dbrizov/dbrizov.github.io/blob/master/images/project-images/water-buoyancy/idle.gif)
 ![gif](https://github.com/dbrizov/dbrizov.github.io/blob/master/images/project-images/water-buoyancy/dive-in.gif)
