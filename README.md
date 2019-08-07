@@ -12,8 +12,11 @@ Credits to [dbrizov](https://github.com/dbrizov)
 ## How To Setup
 
 Drag and drop Water Volume prefab into the scene. Without further configuration, rigidbodies inside it will float.
-No need for tags or layers (although, default Water layer has been added to prefabs)
+
+No need for tags or layers (although, default Water layer has been added to prefabs).
+
 To tweak more specifically how a floating object behaves, add BuoyancyMaterial to it. By default, rigidbodies will sink slowly.
+
 It will also work for compound colliders.
 
 ## License
