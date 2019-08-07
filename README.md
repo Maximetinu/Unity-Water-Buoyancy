@@ -1,29 +1,18 @@
-# Unity-WaterBuoyancy
-Water Buoyancy Simulation for Unity Engine
+# Water Buoyancy Physics Simulation
+Water Buoyancy Simulation for Unity Engine (2019.2.0f1)
+
+** These screenshots are from original repository! This repository does not contain any water FX **
 
 ![gif](https://github.com/dbrizov/dbrizov.github.io/blob/master/images/project-images/water-buoyancy/idle.gif)
 ![gif](https://github.com/dbrizov/dbrizov.github.io/blob/master/images/project-images/water-buoyancy/dive-in.gif)
 ![screenshot](https://github.com/dbrizov/dbrizov.github.io/blob/master/images/project-images/water-buoyancy/surface-normal.png)
 
-## System Requirements
-
-Unity 2018.3.0 or later versions. Feel free to try older version
-
 ## How To Setup
 
-You can use the ready to go prefabs (**WaterPro_DayTime** and **WaterPro_NightTime**). <br>
-They are both located in the Prefabs folder. The only difference between the two
-is that they use different shaders for daylight and moonlight. <br>
-
-The two important scripts are **WaterVolume.cs** and **FloatingObject.cs**. <br>
-The water volume applies buoyancy forces only to floating objects.
-The water volume needs to have a tag **Water Volume** in order for the floating objects to detect collisions with the water.
-The floating is just like in real life physics. If an object has density lesser than
-the density of the water, it will float. If an object has greater density than that of the water, it will sink.
-If for example an object has density equal to half the density of the water, then the object will submerge exactly half of its volume.
-The other half of the volume will be above the water. For more info see this [Buoyancy Reference](http://scienceprimer.com/buoyancy) <br>
-
-The **WaterVolume.cs** script works only with the procedural Mesh in the project due to performance optimizations.
+Drag and drop Water Volume prefab into the scene. Without further configuration, rigidbodies inside it will float.
+No need for tags or layers (although, default Water layer has been added to prefabs)
+To tweak more specifically how a floating object behaves, add BuoyancyMaterial to it. By default, rigidbodies will sink slowly.
+It will also work for compound colliders.
 
 ## License
 
