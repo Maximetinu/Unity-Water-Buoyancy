@@ -9,6 +9,12 @@ Credits to [dbrizov](https://github.com/dbrizov)
 ![gif](https://github.com/dbrizov/dbrizov.github.io/blob/master/images/project-images/water-buoyancy/dive-in.gif)
 ![screenshot](https://github.com/dbrizov/dbrizov.github.io/blob/master/images/project-images/water-buoyancy/surface-normal.png)
 
+**Instead, I added some stylized water shaders and cartoonish ripple effects**
+
+![gif](https://github.com/Maximetinu/Water-Buoyancy-Physics-Simulation/blob/master/Images/Water.gif)
+
+Credits to [Minions Art](https://www.patreon.com/posts/making-water-24192529)
+
 ## How To Setup
 
 Drag and drop Water Volume prefab into the scene. Without further configuration, rigidbodies inside it will float.
