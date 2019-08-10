@@ -157,6 +157,33 @@ namespace WaterBuoyancy
         }
 
 
+        // public Vector3[] GetSurroundingTrianglePolygon(Vector3 worldPoint)
+        // {
+        //     Vector3 localPoint = this.transform.InverseTransformPoint(worldPoint);
+        //     int x = Mathf.CeilToInt(localPoint.x / this.QuadSegmentSize);
+        //     int z = Mathf.CeilToInt(localPoint.z / this.QuadSegmentSize);
+        //     if (x <= 0 || z <= 0 || x >= (this.Columns + 1) || z >= (this.Rows + 1))
+        //     {
+        //         return null;
+        //     }
+
+        //     Vector3[] trianglePolygon = new Vector3[3];
+        //     if ((worldPoint - this.meshWorldVertices[this.GetIndex(z, x)]).sqrMagnitude <
+        //         ((worldPoint - this.meshWorldVertices[this.GetIndex(z - 1, x - 1)]).sqrMagnitude))
+        //     {
+        //         trianglePolygon[0] = this.meshWorldVertices[this.GetIndex(z, x)];
+        //     }
+        //     else
+        //     {
+        //         trianglePolygon[0] = this.meshWorldVertices[this.GetIndex(z - 1, x - 1)];
+        //     }
+
+        //     trianglePolygon[1] = this.meshWorldVertices[this.GetIndex(z - 1, x)];
+        //     trianglePolygon[2] = this.meshWorldVertices[this.GetIndex(z, x - 1)];
+
+        //     return trianglePolygon;
+        // }
+
         public Vector3[] GetSurroundingTrianglePolygon(Vector3 worldPoint)
         {
             Vector3 localPoint = this.transform.InverseTransformPoint(worldPoint);
@@ -168,20 +195,40 @@ namespace WaterBuoyancy
             }
 
             Vector3[] trianglePolygon = new Vector3[3];
-            if ((worldPoint - this.meshWorldVertices[this.GetIndex(z, x)]).sqrMagnitude <
-                ((worldPoint - this.meshWorldVertices[this.GetIndex(z - 1, x - 1)]).sqrMagnitude))
+            if ((worldPoint - GetIndexWithWaves(this.GetIndex(z, x))).sqrMagnitude <
+                ((worldPoint - GetIndexWithWaves(this.GetIndex(z - 1, x - 1))).sqrMagnitude))
             {
-                trianglePolygon[0] = this.meshWorldVertices[this.GetIndex(z, x)];
+                trianglePolygon[0] = GetIndexWithWaves(this.GetIndex(z, x));
             }
             else
             {
-                trianglePolygon[0] = this.meshWorldVertices[this.GetIndex(z - 1, x - 1)];
+                trianglePolygon[0] = this.GetIndexWithWaves(this.GetIndex(z - 1, x - 1));
             }
 
-            trianglePolygon[1] = this.meshWorldVertices[this.GetIndex(z - 1, x)];
-            trianglePolygon[2] = this.meshWorldVertices[this.GetIndex(z, x - 1)];
+            trianglePolygon[1] = GetIndexWithWaves(this.GetIndex(z - 1, x));
+            trianglePolygon[2] = GetIndexWithWaves(this.GetIndex(z, x - 1));
 
             return trianglePolygon;
+        }
+
+        // f(x)
+        Vector3 GetIndexWithWaves(int i)
+        {
+            float speed = 1f;
+            float height = 0.2f;
+            float noiseWalk = 0.5f;
+            float noiseStrength = 0.1f;
+
+            Vector3[] baseVertices = mesh.vertices;
+            var vertex = baseVertices[i];
+            vertex.y +=
+                Mathf.Sin(Time.time * speed + baseVertices[i].x + baseVertices[i].y + baseVertices[i].z) *
+                (height / this.transform.localScale.y);
+
+            vertex.y += Mathf.PerlinNoise(baseVertices[i].x + noiseWalk, baseVertices[i].y /*+ Mathf.Sin(Time.time * 0.1f)*/) * noiseStrength;
+
+            return vertex;
+
         }
 
         public Vector3[] GetClosestPointsOnWaterSurface(Vector3 worldPoint, int pointsCount)
