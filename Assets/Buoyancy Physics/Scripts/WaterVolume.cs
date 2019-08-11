@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using WaterBuoyancy.Collections;
 
 namespace WaterBuoyancy
 {
@@ -108,7 +107,7 @@ namespace WaterBuoyancy
             if (this.GetComponent<MeshFilter>().sharedMesh)
             {
                 // Cache vertices on editor
-                this.meshLocalVertices = this.GetComponent<MeshFilter>().sharedMesh.vertices;
+                this.meshLocalVertices = this.GetComponent<MeshFilter>().mesh.vertices;
                 this.meshWorldVertices = this.ConvertPointsToWorldSpace(meshLocalVertices);
 
                 // Draw wireframe
@@ -182,23 +181,6 @@ namespace WaterBuoyancy
             trianglePolygon[2] = this.meshWorldVertices[this.GetIndex(z, x - 1)];
 
             return trianglePolygon;
-        }
-
-        public Vector3[] GetClosestPointsOnWaterSurface(Vector3 worldPoint, int pointsCount)
-        {
-            MinHeap<Vector3> allPoints = new MinHeap<Vector3>(new Vector3HorizontalDistanceComparer(worldPoint));
-            for (int i = 0; i < this.meshWorldVertices.Length; i++)
-            {
-                allPoints.Add(this.meshWorldVertices[i]);
-            }
-
-            Vector3[] closestPoints = new Vector3[pointsCount];
-            for (int i = 0; i < closestPoints.Length; i++)
-            {
-                closestPoints[i] = allPoints.Remove();
-            }
-
-            return closestPoints;
         }
 
         public Vector3 GetSurfaceNormal(Vector3 worldPoint)
