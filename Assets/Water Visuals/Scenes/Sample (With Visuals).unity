@@ -559,7 +559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &375391038
 Transform:
   m_ObjectHideFlags: 0
@@ -2004,6 +2004,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Water Volume VFX CPU WAVES
+      objectReference: {fileID: 0}
+    - target: {fileID: 192293931803635892, guid: e9f7e1889f7a3f74ea71256fbefef9c4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 192293931803635888, guid: e9f7e1889f7a3f74ea71256fbefef9c4,
         type: 3}

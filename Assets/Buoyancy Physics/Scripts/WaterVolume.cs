@@ -167,34 +167,36 @@ namespace WaterBuoyancy
             }
 
             Vector3[] trianglePolygon = new Vector3[3];
-            if ((worldPoint - meshWorldVertices[GetIndex(z, x)]).sqrMagnitude <
-                ((worldPoint - meshWorldVertices[GetIndex(z - 1, x - 1)]).sqrMagnitude))
+            if ((worldPoint - GetTransformedVertex(GetIndex(z, x))).sqrMagnitude <
+                ((worldPoint - GetTransformedVertex(GetIndex(z - 1, x - 1))).sqrMagnitude))
             {
-                trianglePolygon[0] = meshWorldVertices[GetIndex(z, x)];
+                trianglePolygon[0] = GetTransformedVertex(GetIndex(z, x));
             }
             else
             {
-                trianglePolygon[0] = meshWorldVertices[GetIndex(z - 1, x - 1)];
+                trianglePolygon[0] = GetTransformedVertex(GetIndex(z - 1, x - 1));
             }
 
-            trianglePolygon[1] = meshWorldVertices[GetIndex(z - 1, x)];
-            trianglePolygon[2] = meshWorldVertices[GetIndex(z, x - 1)];
+            trianglePolygon[1] = GetTransformedVertex(GetIndex(z - 1, x));
+            trianglePolygon[2] = GetTransformedVertex(GetIndex(z, x - 1));
 
             return trianglePolygon;
         }
 
-        // Vector3 GetTransformedVertex(int i)
-        // {
-        //     var vertex = this.meshLocalVertices[i];
-        //     vertex.y +=
-        //         Mathf.Sin(Time.time * this.speed + this.meshLocalVertices[i].x + this.meshLocalVertices[i].y + this.meshLocalVertices[i].z) *
-        //         (this.height / this.transform.localScale.y);
+        const float speed = 1f;
+        const float height = 0.3f;
 
-        //     vertex.y += Mathf.PerlinNoise(meshLocalVertices[i].x + this.noiseWalk, meshLocalVertices[i].y /*+ Mathf.Sin(Time.time * 0.1f)*/) * this.noiseStrength;
+        Vector3 GetTransformedVertex(int i)
+        {
+            var vertex = meshLocalVertices[i];
+            vertex.y +=
+                Mathf.Sin(Time.timeSinceLevelLoad * speed + meshLocalVertices[i].x + meshLocalVertices[i].y + meshLocalVertices[i].z) *
+                (height);
 
-        //     return vertex;
+            //vertex.y += Mathf.PerlinNoise(baseVertices[i].x, baseVertices[i].y);
 
-        // }
+            return ConvertPointToWorldSpace(vertex);
+        }
 
         public Vector3 GetSurfaceNormal(Vector3 worldPoint)
         {
@@ -264,6 +266,13 @@ namespace WaterBuoyancy
             }
 
             return worldPoints;
+        }
+
+        private Vector3 ConvertPointToWorldSpace(Vector3 localPoint)
+        {
+            Vector3 worldPoint;
+            worldPoint = transform.TransformPoint(localPoint);
+            return worldPoint;
         }
 
         private class Vector3HorizontalDistanceComparer : IComparer<Vector3>
