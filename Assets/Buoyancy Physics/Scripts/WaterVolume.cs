@@ -26,7 +26,7 @@ namespace WaterBuoyancy
         {
             get
             {
-                return this.rows;
+                return rows;
             }
         }
 
@@ -34,7 +34,7 @@ namespace WaterBuoyancy
         {
             get
             {
-                return this.columns;
+                return columns;
             }
         }
 
@@ -42,7 +42,7 @@ namespace WaterBuoyancy
         {
             get
             {
-                return this.quadSegmentSize;
+                return quadSegmentSize;
             }
         }
 
@@ -50,27 +50,27 @@ namespace WaterBuoyancy
         {
             get
             {
-                if (this.mesh == null)
+                if (mesh == null)
                 {
-                    if (this.GetComponent<MeshFilter>().mesh == null)
+                    if (GetComponent<MeshFilter>().mesh == null)
                     {
-                        this.GetComponent<MeshFilter>().sharedMesh = WaterMeshGenerator.GenerateMesh(rows, columns, quadSegmentSize);
+                        GetComponent<MeshFilter>().sharedMesh = WaterMeshGenerator.GenerateMesh(rows, columns, quadSegmentSize);
                     }
-                    this.mesh = this.GetComponent<MeshFilter>().mesh;
+                    mesh = GetComponent<MeshFilter>().mesh;
                 }
 
-                return this.mesh;
+                return mesh;
             }
         }
 
         protected virtual void Awake()
         {
-            this.CacheMeshVertices();
+            CacheMeshVertices();
         }
 
         protected virtual void Update()
         {
-            this.CacheMeshVertices();
+            CacheMeshVertices();
         }
 
         private void UpdateMesh()
@@ -80,7 +80,7 @@ namespace WaterBuoyancy
                 return;
             }
 
-            MeshFilter meshFilter = this.GetComponent<MeshFilter>();
+            MeshFilter meshFilter = GetComponent<MeshFilter>();
 
             Mesh newMesh = WaterMeshGenerator.GenerateMesh(rows, columns, quadSegmentSize);
             newMesh.name = "Water Mesh Instance";
@@ -104,15 +104,15 @@ namespace WaterBuoyancy
 
         protected virtual void OnDrawGizmosSelected()
         {
-            if (this.GetComponent<MeshFilter>().sharedMesh)
+            if (GetComponent<MeshFilter>().sharedMesh)
             {
                 // Cache vertices on editor
-                this.meshLocalVertices = this.GetComponent<MeshFilter>().mesh.vertices;
-                this.meshWorldVertices = this.ConvertPointsToWorldSpace(meshLocalVertices);
+                meshLocalVertices = GetComponent<MeshFilter>().mesh.vertices;
+                meshWorldVertices = ConvertPointsToWorldSpace(meshLocalVertices);
 
                 // Draw wireframe
-                var vertices = this.meshWorldVertices;
-                var triangles = this.GetComponent<MeshFilter>().sharedMesh.triangles;
+                var vertices = meshWorldVertices;
+                var triangles = GetComponent<MeshFilter>().sharedMesh.triangles;
                 for (int i = 0; i < triangles.Length; i += 3)
                 {
                     Gizmos.color = Color.Lerp(Color.white, Color.cyan, 0.5f);
@@ -121,19 +121,19 @@ namespace WaterBuoyancy
                     Gizmos.DrawLine(vertices[triangles[i + 2]], vertices[triangles[i + 0]]);
 
                     Vector3 center = GetAveragePoint(vertices[triangles[i + 0]], vertices[triangles[i + 1]], vertices[triangles[i + 2]]);
-                    Vector3 normal = this.GetSurfaceNormal(center);
+                    Vector3 normal = GetSurfaceNormal(center);
                 }
             }
 
             if (Application.isPlaying)
             {
                 Gizmos.color = Color.cyan - new Color(0f, 0f, 0f, 0.75f);
-                Gizmos.matrix = this.transform.localToWorldMatrix;
+                Gizmos.matrix = transform.localToWorldMatrix;
 
-                Gizmos.DrawCube(this.GetComponent<BoxCollider>().center - Vector3.up * 0.01f, this.GetComponent<BoxCollider>().size);
+                Gizmos.DrawCube(GetComponent<BoxCollider>().center - Vector3.up * 0.01f, GetComponent<BoxCollider>().size);
 
                 Gizmos.color = Color.cyan - new Color(0f, 0f, 0f, 0.5f);
-                Gizmos.DrawWireCube(this.GetComponent<BoxCollider>().center, this.GetComponent<BoxCollider>().size);
+                Gizmos.DrawWireCube(GetComponent<BoxCollider>().center, GetComponent<BoxCollider>().size);
 
                 Gizmos.matrix = Matrix4x4.identity;
             }
@@ -144,12 +144,12 @@ namespace WaterBuoyancy
             if (!Application.isPlaying)
             {
                 Gizmos.color = Color.cyan - new Color(0f, 0f, 0f, 0.75f);
-                Gizmos.matrix = this.transform.localToWorldMatrix;
+                Gizmos.matrix = transform.localToWorldMatrix;
 
-                Gizmos.DrawCube(this.GetComponent<BoxCollider>().center - Vector3.up * 0.01f, this.GetComponent<BoxCollider>().size);
+                Gizmos.DrawCube(GetComponent<BoxCollider>().center - Vector3.up * 0.01f, GetComponent<BoxCollider>().size);
 
                 Gizmos.color = Color.cyan - new Color(0f, 0f, 0f, 0.5f);
-                Gizmos.DrawWireCube(this.GetComponent<BoxCollider>().center, this.GetComponent<BoxCollider>().size);
+                Gizmos.DrawWireCube(GetComponent<BoxCollider>().center, GetComponent<BoxCollider>().size);
 
                 Gizmos.matrix = Matrix4x4.identity;
             }
@@ -158,34 +158,47 @@ namespace WaterBuoyancy
 
         public Vector3[] GetSurroundingTrianglePolygon(Vector3 worldPoint)
         {
-            Vector3 localPoint = this.transform.InverseTransformPoint(worldPoint);
-            int x = Mathf.CeilToInt(localPoint.x / this.QuadSegmentSize);
-            int z = Mathf.CeilToInt(localPoint.z / this.QuadSegmentSize);
-            if (x <= 0 || z <= 0 || x >= (this.Columns + 1) || z >= (this.Rows + 1))
+            Vector3 localPoint = transform.InverseTransformPoint(worldPoint);
+            int x = Mathf.CeilToInt(localPoint.x / QuadSegmentSize);
+            int z = Mathf.CeilToInt(localPoint.z / QuadSegmentSize);
+            if (x <= 0 || z <= 0 || x >= (Columns + 1) || z >= (Rows + 1))
             {
                 return null;
             }
 
             Vector3[] trianglePolygon = new Vector3[3];
-            if ((worldPoint - this.meshWorldVertices[this.GetIndex(z, x)]).sqrMagnitude <
-                ((worldPoint - this.meshWorldVertices[this.GetIndex(z - 1, x - 1)]).sqrMagnitude))
+            if ((worldPoint - meshWorldVertices[GetIndex(z, x)]).sqrMagnitude <
+                ((worldPoint - meshWorldVertices[GetIndex(z - 1, x - 1)]).sqrMagnitude))
             {
-                trianglePolygon[0] = this.meshWorldVertices[this.GetIndex(z, x)];
+                trianglePolygon[0] = meshWorldVertices[GetIndex(z, x)];
             }
             else
             {
-                trianglePolygon[0] = this.meshWorldVertices[this.GetIndex(z - 1, x - 1)];
+                trianglePolygon[0] = meshWorldVertices[GetIndex(z - 1, x - 1)];
             }
 
-            trianglePolygon[1] = this.meshWorldVertices[this.GetIndex(z - 1, x)];
-            trianglePolygon[2] = this.meshWorldVertices[this.GetIndex(z, x - 1)];
+            trianglePolygon[1] = meshWorldVertices[GetIndex(z - 1, x)];
+            trianglePolygon[2] = meshWorldVertices[GetIndex(z, x - 1)];
 
             return trianglePolygon;
         }
 
+        // Vector3 GetTransformedVertex(int i)
+        // {
+        //     var vertex = this.meshLocalVertices[i];
+        //     vertex.y +=
+        //         Mathf.Sin(Time.time * this.speed + this.meshLocalVertices[i].x + this.meshLocalVertices[i].y + this.meshLocalVertices[i].z) *
+        //         (this.height / this.transform.localScale.y);
+
+        //     vertex.y += Mathf.PerlinNoise(meshLocalVertices[i].x + this.noiseWalk, meshLocalVertices[i].y /*+ Mathf.Sin(Time.time * 0.1f)*/) * this.noiseStrength;
+
+        //     return vertex;
+
+        // }
+
         public Vector3 GetSurfaceNormal(Vector3 worldPoint)
         {
-            Vector3[] meshPolygon = this.GetSurroundingTrianglePolygon(worldPoint);
+            Vector3[] meshPolygon = GetSurroundingTrianglePolygon(worldPoint);
             if (meshPolygon != null)
             {
                 Vector3 planeV1 = meshPolygon[1] - meshPolygon[0];
@@ -199,12 +212,12 @@ namespace WaterBuoyancy
                 return planeNormal;
             }
 
-            return this.transform.up;
+            return transform.up;
         }
 
         public float GetWaterLevel(Vector3 worldPoint)
         {
-            Vector3[] meshPolygon = this.GetSurroundingTrianglePolygon(worldPoint);
+            Vector3[] meshPolygon = GetSurroundingTrianglePolygon(worldPoint);
             if (meshPolygon != null)
             {
                 Vector3 planeV1 = meshPolygon[1] - meshPolygon[0];
@@ -223,23 +236,23 @@ namespace WaterBuoyancy
                 return yOnWaterSurface;
             }
 
-            return this.transform.position.y;
+            return transform.position.y;
         }
 
         public bool IsPointUnderWater(Vector3 worldPoint)
         {
-            return this.GetWaterLevel(worldPoint) - worldPoint.y > 0f;
+            return GetWaterLevel(worldPoint) - worldPoint.y > 0f;
         }
 
         private int GetIndex(int row, int column)
         {
-            return row * (this.Columns + 1) + column;
+            return row * (Columns + 1) + column;
         }
 
         private void CacheMeshVertices()
         {
-            this.meshLocalVertices = this.Mesh.vertices;
-            this.meshWorldVertices = this.ConvertPointsToWorldSpace(meshLocalVertices);
+            meshLocalVertices = Mesh.vertices;
+            meshWorldVertices = ConvertPointsToWorldSpace(meshLocalVertices);
         }
 
         private Vector3[] ConvertPointsToWorldSpace(Vector3[] localPoints)
@@ -247,7 +260,7 @@ namespace WaterBuoyancy
             Vector3[] worldPoints = new Vector3[localPoints.Length];
             for (int i = 0; i < localPoints.Length; i++)
             {
-                worldPoints[i] = this.transform.TransformPoint(localPoints[i]);
+                worldPoints[i] = transform.TransformPoint(localPoints[i]);
             }
 
             return worldPoints;
@@ -259,7 +272,7 @@ namespace WaterBuoyancy
 
             public Vector3HorizontalDistanceComparer(Vector3 distanceTo)
             {
-                this.distanceToVector = distanceTo;
+                distanceToVector = distanceTo;
             }
 
             public int Compare(Vector3 v1, Vector3 v2)

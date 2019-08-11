@@ -8,8 +8,7 @@ Shader "Unlit/Simple Water Interactive"
 		_MaskInt ("RenderTexture Mask", 2D) = "white" {}
         _TextureDistort("Texture Wobble", range(0,1)) = 0.1
         _NoiseTex("Extra Wave Noise", 2D) = "white" {}
-        _Speed("Wave Speed", Range(0,1)) = 0.5
-        _Amount("Wave Amount", Range(0,1)) = 0.6
+        _Speed("Wave Speed", Range(0,2)) = 0.5
         _Scale("Scale", Range(0,1)) = 0.5
         _Height("Wave Height", Range(0,1)) = 0.1
         _Foam("Foamline Thickness", Range(0,10)) = 8
@@ -54,7 +53,7 @@ Shader "Unlit/Simple Water Interactive"
             sampler2D _CameraDepthTexture; //Depth Texture
             sampler2D _MainTex, _NoiseTex;//
             float4 _MainTex_ST;
-            float _Speed, _Amount, _Height, _Foam, _Scale;//
+            float _Speed, _Height, _Foam, _Scale;//
             float4 _FoamC;
 			sampler2D _MaskInt;
 
@@ -65,8 +64,8 @@ Shader "Unlit/Simple Water Interactive"
             {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
-                float4 tex = tex2Dlod(_NoiseTex, float4(v.uv.xy, 0, 0));//extra noise tex
-                v.vertex.y += sin(_Time.z * _Speed + (v.vertex.x * v.vertex.z * _Amount * tex)) * _Height;//movement
+                //float4 tex = tex2Dlod(_NoiseTex, float4(v.uv.xy, 0, 0));//extra noise tex
+                v.vertex.y += sin(_Time.y * _Speed + v.vertex.x + v.vertex.y + v.vertex.z) * _Height;//movement
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex);
                

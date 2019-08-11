@@ -10,54 +10,48 @@ namespace WaterBuoyancy
         [SerializeField]
         private float height = 0.2f;
 
-        [SerializeField]
-        private float noiseWalk = 0.5f;
-
-        [SerializeField]
-        private float noiseStrength = 0.1f;
-
         private Mesh mesh;
         private Vector3[] baseVertices;
         private Vector3[] vertices;
 
         protected virtual void Awake()
         {
-            this.mesh = this.GetComponent<MeshFilter>().mesh;
-            this.baseVertices = this.mesh.vertices;
-            this.vertices = new Vector3[this.baseVertices.Length];
+            mesh = GetComponent<MeshFilter>().mesh;
+            baseVertices = mesh.vertices;
+            vertices = new Vector3[baseVertices.Length];
         }
 
         protected virtual void Start()
         {
-            this.ResizeBoxCollider();
+            ResizeBoxCollider();
         }
 
         protected virtual void Update()
         {
-            for (var i = 0; i < this.vertices.Length; i++)
+            for (var i = 0; i < vertices.Length; i++)
             {
-                var vertex = this.baseVertices[i];
-                vertex.y += 
-                    Mathf.Sin(Time.time * this.speed + this.baseVertices[i].x + this.baseVertices[i].y + this.baseVertices[i].z) * 
-                    (this.height / this.transform.localScale.y);
+                var vertex = baseVertices[i];
+                vertex.y +=
+                    Mathf.Sin(Time.timeSinceLevelLoad * speed + baseVertices[i].x + baseVertices[i].y + baseVertices[i].z) *
+                    (height);
 
-                vertex.y += Mathf.PerlinNoise(baseVertices[i].x + this.noiseWalk, baseVertices[i].y /*+ Mathf.Sin(Time.time * 0.1f)*/) * this.noiseStrength;
+                //vertex.y += Mathf.PerlinNoise(baseVertices[i].x, baseVertices[i].y);
 
-                this.vertices[i] = vertex;
+                vertices[i] = vertex;
             }
 
-            this.mesh.vertices = this.vertices;
-            this.mesh.RecalculateNormals();
+            mesh.vertices = vertices;
+            mesh.RecalculateNormals();
         }
 
         private void ResizeBoxCollider()
         {
-            var boxCollider = this.GetComponent<BoxCollider>();
+            var boxCollider = GetComponent<BoxCollider>();
             if (boxCollider != null)
             {
                 Vector3 center = boxCollider.center;
                 center.y = boxCollider.size.y / -2f;
-                center.y += (this.height + this.noiseStrength) / this.transform.localScale.y;
+                center.y += height / transform.localScale.y;
 
                 boxCollider.center = center;
             }
