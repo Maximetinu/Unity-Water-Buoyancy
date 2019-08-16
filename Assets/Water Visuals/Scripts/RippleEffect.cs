@@ -1,12 +1,19 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Camera))]
 public class RippleEffect : MonoBehaviour
 {
-    public Renderer waterRenderer;
+    public WaterBuoyancy.WaterVolume waterVolume;
     public GameObject rippleParticlesPrefab;
 
+    List<ParticleSystem> ripplesInsideWater = new List<ParticleSystem>();
+
+    // TODO: subir para arriba la cámara tanto como olas tenga el shader.
+
     // Referencies
+    BoxCollider waterTrigger;
+    Renderer waterRenderer;
     Camera rippleCamera;
     Bounds waterBounds;
     RenderTexture rippleTexture;
@@ -16,12 +23,14 @@ public class RippleEffect : MonoBehaviour
         InitReferences();
         InitCameraPosition();
         InitCameraSettings();
+        InitTriggerCallbacks();
         InitShader();
-        InitRippleTrigger();
     }
 
     void InitReferences()
     {
+        waterTrigger = waterVolume.GetComponent<BoxCollider>();
+        waterRenderer = waterVolume.GetComponent<Renderer>();
         rippleCamera = GetComponent<Camera>();
         waterBounds = waterRenderer.bounds;
         rippleTexture = new RenderTexture(1024, 1024, 16, RenderTextureFormat.ARGBHalf);
@@ -50,18 +59,6 @@ public class RippleEffect : MonoBehaviour
         c.farClipPlane = 2f;
     }
 
-    void InitRippleTrigger()
-    {
-        BoxCollider box = gameObject.AddComponent<BoxCollider>();
-        box.isTrigger = true;
-
-        Vector3 waterBoundsExtentsAdaptedToRotation = new Vector3(2f * waterBounds.extents.z, 2f * waterBounds.extents.x, 0.05f);
-        box.size = waterBoundsExtentsAdaptedToRotation;
-
-        Vector3 boxCenterAdaptedToRotation = Vector3.forward;
-        box.center = boxCenterAdaptedToRotation;
-    }
-
     float GetMaxWaterExtent(Bounds waterBounds)
     {
         float maxExtent = waterBounds.extents.x;
@@ -72,20 +69,42 @@ public class RippleEffect : MonoBehaviour
         return maxExtent;
     }
 
+    void InitTriggerCallbacks()
+    {
+        var callbacks = waterTrigger.gameObject.AddComponent<TriggerCallbacks>();
+        callbacks.onTriggerEnter += OnTriggerEnter;
+        callbacks.onTriggerExit += OnTriggerExit;
+    }
+
+    void Update()
+    {
+        foreach (ParticleSystem ripple in ripplesInsideWater)
+        {
+            Vector3 nearestSurfacePoint = ripple.transform.position;
+            nearestSurfacePoint.y = waterVolume.GetWaterLevel(nearestSurfacePoint);
+            if (ripple.GetComponentInParent<Collider>().bounds.Contains(nearestSurfacePoint))
+            {
+                if (!ripple.isPlaying) ripple.Play();
+            }
+            else
+            {
+                if (ripple.isPlaying) ripple.Stop();
+            }
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         ParticleSystem particles;
         particles = FindRippleParticles(other.transform);
 
-        if (particles)
-        {
-            particles.Play();
-        }
-        else
+        if (!particles)
         {
             particles = Instantiate(rippleParticlesPrefab, other.transform).GetComponent<ParticleSystem>();
             particles.gameObject.name = rippleParticlesPrefab.name;
         }
+
+        ripplesInsideWater.Add(particles);
     }
 
     void OnTriggerExit(Collider other)
@@ -93,10 +112,7 @@ public class RippleEffect : MonoBehaviour
         ParticleSystem particles;
         particles = FindRippleParticles(other.transform);
 
-        if (particles)
-        {
-            particles.Stop();
-        }
+        ripplesInsideWater.Remove(particles);
     }
 
     ParticleSystem FindRippleParticles(Transform t)

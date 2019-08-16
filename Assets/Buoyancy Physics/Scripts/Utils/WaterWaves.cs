@@ -46,14 +46,18 @@ namespace WaterBuoyancy
 
         private void ResizeBoxCollider()
         {
-            var boxCollider = GetComponent<BoxCollider>();
+            var boxCollider = this.GetComponent<BoxCollider>();
             if (boxCollider != null)
             {
                 Vector3 center = boxCollider.center;
-                center.y = boxCollider.size.y / -2f;
-                center.y += height / transform.localScale.y;
+                Vector3 size = boxCollider.size;
+                float waterLevesIncrement = (this.height) / this.transform.localScale.y;
+
+                size.y += waterLevesIncrement;
+                center.y += waterLevesIncrement / 2f;
 
                 boxCollider.center = center;
+                boxCollider.size = size;
             }
         }
     }
