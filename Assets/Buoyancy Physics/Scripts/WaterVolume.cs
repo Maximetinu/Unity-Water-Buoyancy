@@ -106,7 +106,7 @@ public class WaterVolume : MonoBehaviour
         if (GetComponent<MeshFilter>().sharedMesh)
         {
             // Cache vertices on editor
-            meshLocalVertices = GetComponent<MeshFilter>().mesh.vertices;
+            meshLocalVertices = GetComponent<MeshFilter>().sharedMesh.vertices;
             meshWorldVertices = ConvertPointsToWorldSpace(meshLocalVertices);
 
             // Draw wireframe
