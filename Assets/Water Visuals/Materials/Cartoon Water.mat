@@ -70,12 +70,15 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _Foam: 4.65
+    - _FoamScale: 0.5
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Height: 1
     - _Metallic: 0
     - _Mode: 0
+    - _NoiseStrength: 1
+    - _NoiseStrenth: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _Scale: 0.356
@@ -85,6 +88,8 @@ Material:
     - _SrcBlend: 1
     - _TextureDistort: 0.057
     - _UVSec: 0
+    - _WaveHeight: 0.394
+    - _WaveSpeed: 0.562
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.75627446, g: 0.9343953, b: 0.9716981, a: 0.8039216}

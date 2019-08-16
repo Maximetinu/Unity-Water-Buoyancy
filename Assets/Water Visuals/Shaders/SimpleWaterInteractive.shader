@@ -5,9 +5,9 @@ Shader "Unlit/Simple Water Interactive"
         _Color("Tint", Color) = (1, 1, 1, .5)
         _FoamC("Foam", Color) = (1, 1, 1, .5)
         _MainTex ("Main Texture", 2D) = "white" {}
-		_MaskInt ("RenderTexture Mask", 2D) = "white" {}
+		 [HideInInspector]_MaskInt ("RenderTexture Mask", 2D) = "white" {}
         _TextureDistort("Texture Wobble", range(0,1)) = 0.1
-        _NoiseTex("Extra Wave Noise", 2D) = "white" {}
+        _NoiseTex("Wooble Noise Noise", 2D) = "white" {}
         _Foam("Foamline Thickness", Range(0,10)) = 8
         _FoamScale("Foam Scale", Range(0,1)) = 0.5
         _WaveHeight("Wave Height", Range(0,1)) = 0.1

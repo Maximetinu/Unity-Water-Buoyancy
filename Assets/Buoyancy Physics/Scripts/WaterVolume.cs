@@ -334,7 +334,7 @@ public class WaterVolume : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.attachedRigidbody && !other.attachedRigidbody.isKinematic && !other.GetComponent<BuoyancyMaterial>())
+        if (other.attachedRigidbody && !other.GetComponent<BuoyancyMaterial>())
         {
             BuoyancyMaterial buoyancyMat = other.gameObject.AddComponent<BuoyancyMaterial>();
 
