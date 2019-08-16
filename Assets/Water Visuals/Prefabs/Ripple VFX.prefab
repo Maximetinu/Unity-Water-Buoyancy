@@ -90,3 +90,5 @@ MonoBehaviour:
   waterVolume: {fileID: 0}
   rippleParticlesPrefab: {fileID: 6168998214818574680, guid: ebf38936084fa904290a2e37131bc147,
     type: 3}
+  splashParticlesPrefab: {fileID: 3380729172313710062, guid: 9ffbdf8e82fea9d4e98022e721e1582b,
+    type: 3}

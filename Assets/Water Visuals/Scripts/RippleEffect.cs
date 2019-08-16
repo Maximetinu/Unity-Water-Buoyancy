@@ -6,6 +6,7 @@ public class RippleEffect : MonoBehaviour
 {
     public WaterVolume waterVolume;
     public GameObject rippleParticlesPrefab;
+    public GameObject splashParticlesPrefab;
 
     List<ParticleSystem> ripplesInsideWater = new List<ParticleSystem>();
 
@@ -102,13 +103,19 @@ public class RippleEffect : MonoBehaviour
         ParticleSystem particles;
         particles = FindRippleParticles(other.transform);
 
+        if (other.attachedRigidbody.velocity.magnitude >= 0.5f)
+        {
+            Instantiate(splashParticlesPrefab, other.transform.position, Quaternion.identity);
+        }
+
         if (!particles)
         {
             particles = Instantiate(rippleParticlesPrefab, other.transform).GetComponent<ParticleSystem>();
             particles.gameObject.name = rippleParticlesPrefab.name;
             particles.Stop();
-            ripplesInsideWater.Add(particles);
         }
+
+        ripplesInsideWater.Add(particles);
 
     }
 
@@ -116,6 +123,11 @@ public class RippleEffect : MonoBehaviour
     {
         ParticleSystem particles;
         particles = FindRippleParticles(other.transform);
+
+        if (particles.isPlaying)
+        {
+            particles.Stop();
+        }
 
         ripplesInsideWater.Remove(particles);
     }
