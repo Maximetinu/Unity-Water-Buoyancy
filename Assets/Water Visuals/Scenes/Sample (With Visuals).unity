@@ -946,6 +946,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: b327aa05dc96110499100c57b35d7e4f, type: 2}
+    - target: {fileID: 192293930288114244, guid: e9f7e1889f7a3f74ea71256fbefef9c4,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.792
+      objectReference: {fileID: 0}
     - target: {fileID: 192293930288114247, guid: e9f7e1889f7a3f74ea71256fbefef9c4,
         type: 3}
       propertyPath: waterVolume

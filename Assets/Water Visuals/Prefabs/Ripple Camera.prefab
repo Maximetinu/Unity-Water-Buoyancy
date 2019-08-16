@@ -55,7 +55,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: -1
   far clip plane: 1000
   field of view: 60
   orthographic: 1
@@ -65,7 +65,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 2
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 3b56f320b6836ca40ade8874fd3f05ce, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -87,6 +87,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1327ac5ff0b21df49931491051290668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterRenderer: {fileID: 0}
+  waterVolume: {fileID: 0}
   rippleParticlesPrefab: {fileID: 6168998214818574680, guid: ebf38936084fa904290a2e37131bc147,
     type: 3}

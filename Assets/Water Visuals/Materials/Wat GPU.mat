@@ -73,7 +73,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Height: 0.3
+    - _Height: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -81,7 +81,7 @@ Material:
     - _Scale: 0.356
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 1
+    - _Speed: 0.66
     - _SrcBlend: 1
     - _TextureDistort: 0.057
     - _UVSec: 0

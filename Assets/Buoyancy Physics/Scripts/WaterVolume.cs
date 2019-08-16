@@ -21,6 +21,9 @@ public class WaterVolume : MonoBehaviour
     private Vector3[] meshLocalVertices;
     private Vector3[] meshWorldVertices;
 
+    float waveSpeed = 0f;
+    float waveHeight = 0f;
+
     public int Rows
     {
         get
@@ -65,11 +68,44 @@ public class WaterVolume : MonoBehaviour
     protected virtual void Awake()
     {
         CacheMeshVertices();
+        InitShaderWaves();
     }
 
     protected virtual void Update()
     {
         CacheMeshVertices();
+    }
+
+    void InitShaderWaves()
+    {
+        Renderer waterRenderer = GetComponent<Renderer>();
+        if (waterRenderer.material.HasProperty("_Speed") && waterRenderer.material.HasProperty("_Height"))
+        {
+            waveSpeed = waterRenderer.material.GetFloat("_Speed");
+            waveHeight = waterRenderer.material.GetFloat("_Height");
+        }
+
+        if (waveHeight != 0)
+        {
+            ResizeBoxCollider();
+        }
+    }
+
+    private void ResizeBoxCollider()
+    {
+        var boxCollider = this.GetComponent<BoxCollider>();
+        if (boxCollider != null)
+        {
+            Vector3 center = boxCollider.center;
+            Vector3 size = boxCollider.size;
+            float waterLevesIncrement = (this.waveHeight) / this.transform.lossyScale.y;
+
+            size.y += waterLevesIncrement;
+            center.y += waterLevesIncrement / 2f;
+
+            boxCollider.center = center;
+            boxCollider.size = size;
+        }
     }
 
     private void UpdateMesh()
@@ -182,15 +218,13 @@ public class WaterVolume : MonoBehaviour
         return trianglePolygon;
     }
 
-    const float speed = 1f;
-    const float height = 0.3f;
-
+    // Same algorithm that shader
     Vector3 GetTransformedVertex(int i)
     {
         var vertex = meshLocalVertices[i];
         vertex.y +=
-            Mathf.Sin(Time.timeSinceLevelLoad * speed + meshLocalVertices[i].x + meshLocalVertices[i].y + meshLocalVertices[i].z) *
-            (height);
+            Mathf.Sin(Time.timeSinceLevelLoad * waveSpeed + meshLocalVertices[i].x + meshLocalVertices[i].y + meshLocalVertices[i].z) *
+            (waveHeight) / transform.lossyScale.y;
 
         //vertex.y += Mathf.PerlinNoise(baseVertices[i].x, baseVertices[i].y);
 

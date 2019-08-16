@@ -9,8 +9,6 @@ public class RippleEffect : MonoBehaviour
 
     List<ParticleSystem> ripplesInsideWater = new List<ParticleSystem>();
 
-    // TODO: subir para arriba la cámara tanto como olas tenga el shader.
-
     // Referencies
     BoxCollider waterTrigger;
     Renderer waterRenderer;
@@ -18,7 +16,7 @@ public class RippleEffect : MonoBehaviour
     Bounds waterBounds;
     RenderTexture rippleTexture;
 
-    void Awake()
+    void Start()
     {
         InitReferences();
         InitCameraPosition();
@@ -47,7 +45,7 @@ public class RippleEffect : MonoBehaviour
     void InitCameraPosition()
     {
         transform.SetParent(waterRenderer.transform);
-        transform.position = waterBounds.center + Vector3.up;
+        transform.position = waterBounds.center + Vector3.up * 5; // 5 as Max Wave Height, more will surpass camera near plane 
         transform.rotation = Quaternion.Euler(90f, 0f, 0f);
     }
 
@@ -56,7 +54,7 @@ public class RippleEffect : MonoBehaviour
         Camera c = GetComponent<Camera>();
         c.orthographicSize = GetMaxWaterExtent(waterBounds);
         c.targetTexture = rippleTexture;
-        c.farClipPlane = 2f;
+        c.farClipPlane = 10f;
     }
 
     float GetMaxWaterExtent(Bounds waterBounds)
@@ -84,11 +82,17 @@ public class RippleEffect : MonoBehaviour
             nearestSurfacePoint.y = waterVolume.GetWaterLevel(nearestSurfacePoint);
             if (ripple.GetComponentInParent<Collider>().bounds.Contains(nearestSurfacePoint))
             {
-                if (!ripple.isPlaying) ripple.Play();
+                if (!ripple.isPlaying)
+                {
+                    ripple.Play();
+                }
             }
             else
             {
-                if (ripple.isPlaying) ripple.Stop();
+                if (ripple.isPlaying)
+                {
+                    ripple.Stop();
+                }
             }
         }
     }
@@ -102,9 +106,10 @@ public class RippleEffect : MonoBehaviour
         {
             particles = Instantiate(rippleParticlesPrefab, other.transform).GetComponent<ParticleSystem>();
             particles.gameObject.name = rippleParticlesPrefab.name;
+            particles.Stop();
+            ripplesInsideWater.Add(particles);
         }
 
-        ripplesInsideWater.Add(particles);
     }
 
     void OnTriggerExit(Collider other)

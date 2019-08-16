@@ -26,6 +26,11 @@ public class WaterVolumeEditor : Editor
         waterVolumeTarget.GetComponent<BoxCollider>().hideFlags = HideFlags.NotEditable;
         waterVolumeTarget.GetComponent<BoxCollider>().isTrigger = true;
         waterVolumeTarget.GetComponent<BoxCollider>().enabled = waterVolumeTarget.enabled;
+
+        if (Application.isPlaying)
+        {
+            waterVolumeTarget.GetComponent<Renderer>().material.hideFlags = HideFlags.NotEditable;
+        }
     }
 
     protected virtual void OnDisable()

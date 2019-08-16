@@ -65,7 +65,7 @@ Shader "Unlit/Simple Water Interactive"
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
                 //float4 tex = tex2Dlod(_NoiseTex, float4(v.uv.xy, 0, 0));//extra noise tex
-                v.vertex.y += sin(_Time.y * _Speed + v.vertex.x + v.vertex.y + v.vertex.z) * _Height;//movement
+                v.vertex.y += sin(_Time.y * _Speed + v.vertex.x + v.vertex.y + v.vertex.z) * _Height / unity_ObjectToWorld[1].y;//movement
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.worldPos = mul(unity_ObjectToWorld, v.vertex);
                
