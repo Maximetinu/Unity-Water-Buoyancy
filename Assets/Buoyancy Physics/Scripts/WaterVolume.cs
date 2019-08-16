@@ -6,8 +6,6 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MeshFilter))]
 public class WaterVolume : MonoBehaviour
 {
-    private const float BOX_COLLIDER_HEIGHT = 5f;
-
     [SerializeField]
     private int rows = 10;
 
@@ -71,18 +69,16 @@ public class WaterVolume : MonoBehaviour
         InitShaderWaves();
     }
 
-    protected virtual void Update()
-    {
-        CacheMeshVertices();
-    }
-
     void InitShaderWaves()
     {
+        const string SHADER_HEIGHT_PROPERTY = "_WaveHeight";
+        const string SHADER_SPEED_PROPERTY = "_WaveSpeed";
         Renderer waterRenderer = GetComponent<Renderer>();
-        if (waterRenderer.material.HasProperty("_Speed") && waterRenderer.material.HasProperty("_Height"))
+
+        if (waterRenderer.material.HasProperty(SHADER_SPEED_PROPERTY) && waterRenderer.material.HasProperty(SHADER_HEIGHT_PROPERTY))
         {
-            waveSpeed = waterRenderer.material.GetFloat("_Speed");
-            waveHeight = waterRenderer.material.GetFloat("_Height");
+            waveSpeed = waterRenderer.material.GetFloat(SHADER_SPEED_PROPERTY);
+            waveHeight = waterRenderer.material.GetFloat(SHADER_HEIGHT_PROPERTY);
         }
 
         if (waveHeight != 0)
@@ -121,20 +117,6 @@ public class WaterVolume : MonoBehaviour
         newMesh.name = "Water Mesh Instance";
 
         meshFilter.sharedMesh = newMesh;
-    }
-
-    private void UpdateBoxCollider()
-    {
-        var boxCollider = GetComponent<BoxCollider>();
-        if (boxCollider != null)
-        {
-            Vector3 size = new Vector3(columns * quadSegmentSize, BOX_COLLIDER_HEIGHT, rows * quadSegmentSize);
-            boxCollider.size = size;
-
-            Vector3 center = size / 2f;
-            center.y *= -1f;
-            boxCollider.center = center;
-        }
     }
 
     protected virtual void OnDrawGizmosSelected()
@@ -218,7 +200,7 @@ public class WaterVolume : MonoBehaviour
         return trianglePolygon;
     }
 
-    // Same algorithm that shader
+    // Same algorithm that shader's
     Vector3 GetTransformedVertex(int i)
     {
         var vertex = meshLocalVertices[i];
