@@ -67,11 +67,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4405522491949844074, guid: 476bd611f0d665e459ce89cdd964ea32,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 8958630155739705377, guid: 476bd611f0d665e459ce89cdd964ea32,
         type: 3}
       propertyPath: m_Enabled
@@ -81,7 +76,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: c08cb3a52773e6b43896f01119bde123, type: 2}
+      objectReference: {fileID: 2100000, guid: b327aa05dc96110499100c57b35d7e4f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 476bd611f0d665e459ce89cdd964ea32, type: 3}
 --- !u!4 &192293931803635888 stripped
@@ -90,12 +85,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4578090520218466012}
   m_PrefabAsset: {fileID: 0}
---- !u!23 &4889739022588692221 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 8958630155739705377, guid: 476bd611f0d665e459ce89cdd964ea32,
+--- !u!114 &192293931803635895 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4405522491949844075, guid: 476bd611f0d665e459ce89cdd964ea32,
     type: 3}
   m_PrefabInstance: {fileID: 4578090520218466012}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c693f8f8a6eb0314199342173d484505, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7182894237908360740
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -106,7 +107,7 @@ PrefabInstance:
     - target: {fileID: 6991255745743500415, guid: aca7f76be69a588439b3eb080d515a23,
         type: 3}
       propertyPath: m_Name
-      value: Ripple Camera
+      value: Ripple VFX
       objectReference: {fileID: 0}
     - target: {fileID: 6991255745743500384, guid: aca7f76be69a588439b3eb080d515a23,
         type: 3}
@@ -116,7 +117,7 @@ PrefabInstance:
     - target: {fileID: 6991255745743500384, guid: aca7f76be69a588439b3eb080d515a23,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 7.792
       objectReference: {fileID: 0}
     - target: {fileID: 6991255745743500384, guid: aca7f76be69a588439b3eb080d515a23,
         type: 3}
@@ -180,8 +181,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6991255745743500387, guid: aca7f76be69a588439b3eb080d515a23,
         type: 3}
-      propertyPath: waterRenderer
+      propertyPath: waterVolume
       value: 
-      objectReference: {fileID: 4889739022588692221}
+      objectReference: {fileID: 192293931803635895}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aca7f76be69a588439b3eb080d515a23, type: 3}
