@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(Camera))]
 public class RippleEffect : MonoBehaviour
 {
-    public WaterBuoyancy.WaterVolume waterVolume;
+    public WaterVolume waterVolume;
     public GameObject rippleParticlesPrefab;
 
     List<ParticleSystem> ripplesInsideWater = new List<ParticleSystem>();

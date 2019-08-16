@@ -1,64 +1,61 @@
 ﻿using UnityEngine;
 
-namespace WaterBuoyancy
+public class WaterWaves : MonoBehaviour
 {
-    public class WaterWaves : MonoBehaviour
+    [SerializeField]
+    private float speed = 1f;
+
+    [SerializeField]
+    private float height = 0.2f;
+
+    private Mesh mesh;
+    private Vector3[] baseVertices;
+    private Vector3[] vertices;
+
+    protected virtual void Awake()
     {
-        [SerializeField]
-        private float speed = 1f;
+        mesh = GetComponent<MeshFilter>().mesh;
+        baseVertices = mesh.vertices;
+        vertices = new Vector3[baseVertices.Length];
+    }
 
-        [SerializeField]
-        private float height = 0.2f;
+    protected virtual void Start()
+    {
+        ResizeBoxCollider();
+    }
 
-        private Mesh mesh;
-        private Vector3[] baseVertices;
-        private Vector3[] vertices;
-
-        protected virtual void Awake()
+    protected virtual void Update()
+    {
+        for (var i = 0; i < vertices.Length; i++)
         {
-            mesh = GetComponent<MeshFilter>().mesh;
-            baseVertices = mesh.vertices;
-            vertices = new Vector3[baseVertices.Length];
+            var vertex = baseVertices[i];
+            vertex.y +=
+                Mathf.Sin(Time.timeSinceLevelLoad * speed + baseVertices[i].x + baseVertices[i].y + baseVertices[i].z) *
+                (height);
+
+            //vertex.y += Mathf.PerlinNoise(baseVertices[i].x, baseVertices[i].y);
+
+            vertices[i] = vertex;
         }
 
-        protected virtual void Start()
+        mesh.vertices = vertices;
+        mesh.RecalculateNormals();
+    }
+
+    private void ResizeBoxCollider()
+    {
+        var boxCollider = this.GetComponent<BoxCollider>();
+        if (boxCollider != null)
         {
-            ResizeBoxCollider();
-        }
+            Vector3 center = boxCollider.center;
+            Vector3 size = boxCollider.size;
+            float waterLevesIncrement = (this.height) / this.transform.localScale.y;
 
-        protected virtual void Update()
-        {
-            for (var i = 0; i < vertices.Length; i++)
-            {
-                var vertex = baseVertices[i];
-                vertex.y +=
-                    Mathf.Sin(Time.timeSinceLevelLoad * speed + baseVertices[i].x + baseVertices[i].y + baseVertices[i].z) *
-                    (height);
+            size.y += waterLevesIncrement;
+            center.y += waterLevesIncrement / 2f;
 
-                //vertex.y += Mathf.PerlinNoise(baseVertices[i].x, baseVertices[i].y);
-
-                vertices[i] = vertex;
-            }
-
-            mesh.vertices = vertices;
-            mesh.RecalculateNormals();
-        }
-
-        private void ResizeBoxCollider()
-        {
-            var boxCollider = this.GetComponent<BoxCollider>();
-            if (boxCollider != null)
-            {
-                Vector3 center = boxCollider.center;
-                Vector3 size = boxCollider.size;
-                float waterLevesIncrement = (this.height) / this.transform.localScale.y;
-
-                size.y += waterLevesIncrement;
-                center.y += waterLevesIncrement / 2f;
-
-                boxCollider.center = center;
-                boxCollider.size = size;
-            }
+            boxCollider.center = center;
+            boxCollider.size = size;
         }
     }
 }
