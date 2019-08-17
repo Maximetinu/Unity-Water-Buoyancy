@@ -77,6 +77,8 @@ public class RippleEffect : MonoBehaviour
 
     void Update()
     {
+        waterRenderer.material.SetVector("_Position", transform.position);
+
         foreach (ParticleSystem ripple in ripplesInsideWater)
         {
             Vector3 nearestSurfacePoint = ripple.transform.position;

@@ -57,6 +57,7 @@ Shader "Unlit/Simple Water Interactive"
             float4 _FoamC;
 			sampler2D _MaskInt;
 
+            float3 _Position;
 			sampler2D _GlobalEffectRT;
 			float _OrthographicCamSize;
  
@@ -78,7 +79,7 @@ Shader "Unlit/Simple Water Interactive"
             fixed4 frag (v2f i) : SV_Target
             {
 				// rendertexture UV
-				float2 uv = i.worldPos.xz;
+				float2 uv = i.worldPos.xz - _Position.xz;
 				uv = uv/(_OrthographicCamSize *2);
 				uv += 0.5;
 				// Ripples
