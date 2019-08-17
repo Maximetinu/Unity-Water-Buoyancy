@@ -124,10 +124,13 @@ public class RippleEffect : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
+        if (other.isTrigger)
+            return;
+
         ParticleSystem particles;
         particles = FindRippleParticles(other.transform);
 
-        if (particles.isPlaying)
+        if (particles && particles.isPlaying)
         {
             particles.Stop();
         }
