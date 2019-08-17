@@ -27,7 +27,7 @@ public class WaterVolumeEditor : Editor
         waterVolumeTarget.GetComponent<BoxCollider>().isTrigger = true;
         waterVolumeTarget.GetComponent<BoxCollider>().enabled = waterVolumeTarget.enabled;
 
-        if (Application.isPlaying)
+        if (Application.isPlaying && !PrefabUtility.IsPartOfPrefabAsset(waterVolumeTarget))
         {
             waterVolumeTarget.GetComponent<Renderer>().material.hideFlags = HideFlags.NotEditable;
         }
