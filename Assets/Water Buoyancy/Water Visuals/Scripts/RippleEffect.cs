@@ -100,6 +100,9 @@ public class RippleEffect : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if (other.isTrigger)
+            return;
+
         ParticleSystem particles;
         particles = FindRippleParticles(other.transform);
 
